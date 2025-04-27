@@ -1,67 +1,58 @@
 import React from 'react';
 
-import ducky from '../../assets/images/ducky.png';
-import piggy from '../../assets/images/Piggy.png';
-import power from '../../assets/images/power.png';
-import sammy from '../../assets/images/Sammy.png';
-import sandwichy from '../../assets/images/Sandwichy.png';
-import sparco from '../../assets/images/sparco.png';
-import trashy from '../../assets/images/Trashy.png';
-
-
 const stickers = [
-  ducky,
-  piggy,
-  power,
-  sammy,
-  sandwichy,
-  sparco,
-  trashy,
-  ducky,
-  piggy,
-  power,
-  sammy,
-  sandwichy,
-  sparco,
-  trashy,
-  ducky,
+  require('client/assets/images/ducky.png'),
+  require('client/assets/images/Piggy.png'),
+  require('client/assets/images/power.png'),
+  require('client/assets/images/Sammy.png'),
+  require('client/assets/images/Sandwichy.png'),
+  require('client/assets/images/sparco.png'),
+  require('client/assets/images/Trashy.png'),
+  require('client/assets/images/ducky.png'),
+  require('client/assets/images/Piggy.png'),
+  require('client/assets/images/power.png'),
+  require('client/assets/images/Sammy.png'),
+  require('client/assets/images/Sandwichy.png'),
+  require('client/assets/images/ducky.png'),
+  require('client/assets/images/Trashy.png'),
+  require('client/assets/images/Sammy.png'),
 ];
 
 const styles = {
   container: {
-    padding: '16px',
+    padding: 16,
     display: 'flex',
-    flexDirection: 'column' as 'column',
+    flexDirection: 'column' as const,
     flexGrow: 1,
-    overflowY: 'auto' as 'auto',
+    overflowY: 'auto' as const,
     backgroundColor: '#ffffff',
   },
   title: {
-    fontSize: '28px',
-    fontWeight: 'bold',
-    marginBottom: '16px',
-    textAlign: 'left' as 'left',
+    fontSize: 28,
+    fontWeight: 'bold' as const,
+    marginBottom: 16,
+    textAlign: 'left' as const,
   },
   searchIcon: {
-    width: '20px',
-    height: '20px',
-    marginLeft: 'auto' as 'auto',
+    width: 20,
+    height: 20,
+    marginLeft: 'auto' as const,
   },
   headerRow: {
     display: 'flex',
     alignItems: 'center',
-    marginBottom: '8px',
+    marginBottom: 8,
     borderBottom: '2px solid black',
-    paddingBottom: '8px',
+    paddingBottom: 8,
   },
   grid: {
     display: 'grid',
     gridTemplateColumns: 'repeat(3, 1fr)',
-    gap: '16px',
+    gap: 16,
   },
   sticker: {
     width: '100%',
-    objectFit: 'contain' as 'contain',
+    objectFit: 'contain' as const,
   },
 };
 
@@ -70,6 +61,11 @@ function Collection() {
     <div style={styles.container}>
       <div style={styles.headerRow}>
         <h1 style={styles.title}>Collection</h1>
+        <img
+          src="/icons/search.svg"
+          alt="Search"
+          style={styles.searchIcon}
+        />
       </div>
 
       <div style={styles.grid}>
