@@ -1,5 +1,21 @@
 import React, { createContext, useState, useContext, ReactNode } from 'react';
 import { router } from 'expo-router';
+import Constants from 'expo-constants';
+
+// For local development with both client and server on same machine
+// Use appropriate localhost URLs depending on platform
+import { Platform } from 'react-native';
+
+let API_URL: string;
+if (Platform.OS === 'web') {
+  API_URL = 'http://localhost:5000/api'; // For web testing
+} else if (Platform.OS === 'android') {
+  API_URL = 'http://10.0.2.2:5000/api'; // For Android emulator
+} else {
+  API_URL = 'http://localhost:5000/api'; // For iOS simulator
+}
+
+console.log(`Using API URL: ${API_URL} on platform: ${Platform.OS}`);
 
 type User = {
   id: string;
@@ -26,11 +42,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsLoading(true);
     
     try {
-      // In a real app, you would make an API call to your backend
-      // const response = await fetch('your-api-endpoint/login', { ... });
-      // if response is successful, set the user
-      
-      // For demo purposes:
+      // Placeholder for login API call
+      // Will implement this later
       await new Promise(resolve => setTimeout(resolve, 1000));
       
       setUser({
@@ -51,14 +64,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsLoading(true);
     
     try {
-      // In a real app, you would make an API call to your backend
-      // const response = await fetch('your-api-endpoint/register', { ... });
+      console.log('Sending registration request to:', `${API_URL}/auth/register`);
+      console.log('Registration data:', { name, email, password: '****' });
       
-      // For demo purposes:
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const response = await fetch(`${API_URL}/auth/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({ name, email, password }),
+      });
       
-      // In a real app, you might want to set the user automatically after registration
-      // or redirect to login
+      console.log('Registration response status:', response.status);
+      
+      const data = await response.json();
+      console.log('Registration response data:', data);
+      
+      if (!response.ok) {
+        console.error('Registration failed:', data.message || 'Unknown error');
+        return false;
+      }
+      
       return true;
     } catch (error) {
       console.error('Registration error:', error);
