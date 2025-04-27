@@ -24,9 +24,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Import routes
 const authRoutes = require('./routes/authRoutes');
+const userRoutes = require('./routes/userRoutes');
 
 // Mount routes
 app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
 
 // Home route for testing
 app.get('/', (req, res) => {

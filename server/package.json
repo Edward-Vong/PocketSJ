@@ -22,6 +22,7 @@
     "server": "file:"
   },
   "devDependencies": {
+    "@types/react-native": "^0.72.8",
     "nodemon": "^3.1.10"
   }
 }

@@ -1,0 +1,65 @@
+// API URL based on platform
+import { Platform } from 'react-native';
+
+// Get the API URL based on platform
+export const getApiUrl = (): string => {
+  if (Platform.OS === 'web') {
+    return 'http://localhost:5000/api';
+  } else if (Platform.OS === 'android') {
+    return 'http://10.0.2.2:5000/api';
+  } else {
+    return 'http://localhost:5000/api';
+  }
+};
+
+// Create authenticated request headers
+export const authHeader = (token: string | null): Headers => {
+  const headers = new Headers();
+  headers.append('Content-Type', 'application/json');
+  headers.append('Accept', 'application/json');
+  
+  if (token) {
+    headers.append('Authorization', `Bearer ${token}`);
+  }
+  
+  return headers;
+};
+
+// Make authenticated request
+export const authFetch = async (
+  endpoint: string,
+  token: string | null,
+  options: RequestInit = {}
+): Promise<Response> => {
+  const apiUrl = getApiUrl();
+  const url = `${apiUrl}${endpoint}`;
+  
+  const headers = authHeader(token);
+  
+  const config: RequestInit = {
+    ...options,
+    headers
+  };
+  
+  return fetch(url, config);
+};
+
+// Get user profile 
+export const getUserProfile = async (token: string | null): Promise<any> => {
+  try {
+    const response = await authFetch('/users/me', token, {
+      method: 'GET'
+    });
+    
+    const data = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to get user profile');
+    }
+    
+    return data.data.user;
+  } catch (error) {
+    console.error('Failed to get user profile:', error);
+    throw error;
+  }
+};

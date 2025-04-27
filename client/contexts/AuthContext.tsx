@@ -26,6 +26,7 @@ type User = {
 
 type AuthContextType = {
   user: User | null;
+  token: string | null;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
@@ -36,21 +37,40 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const login = async (email: string, password: string): Promise<boolean> => {
     setIsLoading(true);
     
     try {
-      // Placeholder for login API call
-      // Will implement this later
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      console.log('Sending login request to:', `${API_URL}/auth/login`);
+      console.log('Login data:', { email, password: '****' });
       
-      setUser({
-        id: '1',
-        email: email,
+      const response = await fetch(`${API_URL}/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
       });
       
+      console.log('Login response status:', response.status);
+      
+      const data = await response.json();
+      console.log('Login response received');
+      
+      if (!response.ok) {
+        console.error('Login failed:', data.message || 'Unknown error');
+        return false;
+      }
+      
+      // Store user data and token
+      setUser(data.data.user);
+      setToken(data.data.token);
+      
+      console.log('Login successful');
       return true;
     } catch (error) {
       console.error('Login error:', error);
@@ -96,13 +116,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const logout = () => {
-    // In a real app, you might want to call your logout API endpoint here
+    // Clear user data and token
     setUser(null);
+    setToken(null);
     router.replace('/login');
   };
 
   return (
-    <AuthContext.Provider value={{ user, isLoading, login, logout, register }}>
+    <AuthContext.Provider value={{ user, token, isLoading, login, logout, register }}>
       {children}
     </AuthContext.Provider>
   );
